@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" th:href="@{../css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{../css/fontawesome-all.min.css}">
+    <link rel="stylesheet" th:href="@{../css/bootadmin.min.css}">
+
+    <title>BootAdmin</title>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand navbar-dark bg-primary">
+    <a class="sidebar-toggle mr-3" href="#"><i class="fa fa-bars"></i></a>
+    <a class="navbar-brand" href="#">BootAdmin</a>
+
+    <div class="navbar-collapse collapse">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a href="#" class="nav-link"><i class="fa fa-envelope"></i> 5</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="fa fa-bell"></i> 3</a></li>
+            <li class="nav-item dropdown">
+                <a href="#" id="dd_user" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Doe</a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd_user">
+                    <a href="#" class="dropdown-item">Profile</a>
+                    <a href="#" class="dropdown-item">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="d-flex">
+    <div class="sidebar sidebar-dark bg-dark">
+        <ul class="list-unstyled">
+            <li><a th:href="@{/user}"><i class="fa fa-fw fa-link"></i> Users</a></li>
+            <li><a th:href="@{/category}"><i class="fa fa-fw fa-link"></i> Categories</a></li>
+            <li><a th:href="@{/product}"><i class="fa fa-fw fa-link"></i> Products</a></li>
+        </ul>
+    </div>
+
+    <div class="content p-4">
+
+        <div class="card mb-4">
+            <div class="card-header bg-white font-weight-bold">
+                Add user
+            </div>
+            <div class="card-body">
+                <form th:action="@{/product}" method="post" th:object="${product}">
+                    <input th:type="hidden" th:field="*{id}">
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="name">Name</label>
+                            <input th:field="*{name}" th:errorclass="is-invalid"
+                                   type="text" class="form-control" id="name" placeholder="Name">
+                            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback" id="nameError">
+                                Имя не может быть пустым!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="description">Description</label>
+                            <input th:field="*{description}" th:errorclass="is-invalid"
+                                   type="text" class="form-control" id="description" placeholder="Description">
+                            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="invalid-feedback" id="descriptionError">
+                                Имя не может быть пустым!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="price">Price</label>
+                            <input th:field="*{price}"  th:errorclass="is-invalid"
+                                   type="text" class="form-control" id="price" placeholder="Price">
+                            <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="invalid-feedback" id="priceError">
+                                Имя не может быть пустым!
+                            </div>
+                        </div>
+                    </div>
+
+                    <fieldset class="form-group">
+                        <legend class="col-form-label col-sm-2 pt-0">Categories</legend>
+
+                        <div th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}"
+                             style="color: #dc3545; font-size: 12px"  id="rolesError">
+                            Имя не может быть пустым!
+                        </div>
+
+                        <div class="row" >
+                            <div class="col-sm-10" th:each="category : ${categories}">
+                                <div class="form-check">
+                                    <input th:value="${category.name}" th:id="${category.id}" th:field="*{categories}"
+                                           class="form-check-input" type="checkbox" th:name="${category.name}"
+                                           th:checked="${product.contains(category)}">
+                                    <label th:text="${category.name}" class="form-check-label" th:for="${category.id}">
+                                        First radio
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </fieldset>
+
+                    <div class="card-footer bg-white">
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+<script th:src="@{../js/jquery.min.js}"></script>
+<script th:src="@{../js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{../js/bootadmin.min.js}"></script>
+
+</body>
+</html>
