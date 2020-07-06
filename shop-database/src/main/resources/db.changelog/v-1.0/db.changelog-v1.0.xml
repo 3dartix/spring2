@@ -46,6 +46,17 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="3" author="art">
+        <sqlFile dbms="mysql"
+                 encoding="utf8"
+                 endDelimiter="\nGO"
+                 path="create-order-and-orderitem-tables.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="true"/>
+        <rollback></rollback>
+    </changeSet>
+
 
 <!--тоже не работает-->
 <!--    <changeSet id="3" author="art">-->

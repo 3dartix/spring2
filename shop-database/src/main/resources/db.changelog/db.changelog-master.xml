@@ -20,4 +20,16 @@
     
     <include file="v-1.0/db.changelog-v1.0.xml" relativeToChangelogFile="true"/>
 
+    <changeSet author="aleks_ush" id="4">
+        <tagDatabase tag="v-2.0"/>
+    </changeSet>
+
+    <include file="v-2.0/db.changelog-v2.0.xml" relativeToChangelogFile="true"/>
+
+    <changeSet author="art" id="6">
+        <tagDatabase tag="v-3.0"/>
+    </changeSet>
+
+    <include file="v-3.0/db.changelog-v3.0.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

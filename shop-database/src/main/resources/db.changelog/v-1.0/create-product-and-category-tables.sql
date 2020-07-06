@@ -7,9 +7,9 @@ GO
 
     create table products (
        id bigint not null auto_increment,
-        description varchar(255),
+        description text,
         name varchar(150),
-        price float,
+        price NUMERIC,
         primary key (id)
     ) engine=InnoDB;
 GO

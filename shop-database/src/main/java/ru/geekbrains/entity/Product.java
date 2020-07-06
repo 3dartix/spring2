@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 
 @NoArgsConstructor
@@ -22,49 +19,39 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank (message = "Заполните название продукта")
     @Column(length = 150)
     private String name;
 
-    @NotBlank (message = "Заполните описание продукта")
-    @Column
+    @Column (columnDefinition = "TEXT")
+//    @Lob
+//    @Column(name="description", length=512)
     private String description;
 
-    @NotNull (message = "Заполните цену продукта")
     @Column
-    private Float price;
+    private BigDecimal price;
 
+    @ManyToOne(optional = false)
+    private Brand brand;
 
-    @NotNull(message = "Выберите хотя бы одну категорию")
-    @Size(min = 1, message = "Выберите хотя бы одну категорию")
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "product_category",
             joinColumns = @JoinColumn(name="product_id"),
             inverseJoinColumns = @JoinColumn(name="category_id"))
     private List<Category> categories;
 
-    public boolean contains(Category category){
-        if(categories != null){
-            return categories.contains(category);
-        }
-        return false;
-    }
-
-    public String getCategoriesLine() {
-        String result = new String();
-        if(categories != null) {
-            for (Category category : categories) {
-                result = result + ", " + category.getName();
-            }
-        }
-        result = result.replaceFirst(", ", "");
-        return result;
-    }
+    @OneToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
+    @JoinTable(name = "products_pictures",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "picture_id"))
+    private List<Picture> pictures;
 
     @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
-                ", name='" + name + '\'';
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

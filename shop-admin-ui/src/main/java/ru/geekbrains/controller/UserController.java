@@ -58,15 +58,15 @@ public class UserController {
     public String saveUser(@Valid User user, BindingResult bindingResult, Model model) {
         log.info("Save user method");
 
-        //обработка одинаковых имен не работатет, когда мы редактируем объект
-        if(hasName(user.getName())) {
-            log.info("This name is already in use");
-//            ObjectError error = new ObjectError("name","This name is already in use");
-//            bindingResult.addError(error);
-            bindingResult.rejectValue("name", "error.user","Это имя уже используется");
-            model.addAttribute("roles", roleRepository.findAll());
-            return "user";
-        }
+//        //обработка одинаковых имен не работатет, когда мы редактируем объект
+//        if(hasName(user.getName())) {
+//            log.info("This name is already in use");
+////            ObjectError error = new ObjectError("name","This name is already in use");
+////            bindingResult.addError(error);
+//            bindingResult.rejectValue("name", "error.user","Это имя уже используется");
+//            model.addAttribute("roles", roleRepository.findAll());
+//            return "user";
+//        }
 
         if(bindingResult.hasErrors()){
             log.info(bindingResult.getAllErrors());

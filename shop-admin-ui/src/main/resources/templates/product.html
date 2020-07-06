@@ -1,44 +1,15 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" th:href="@{../css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{../css/fontawesome-all.min.css}">
-    <link rel="stylesheet" th:href="@{../css/bootadmin.min.css}">
+<div th:replace="fragments/head :: head"></div>
 
-    <title>BootAdmin</title>
-</head>
 <body class="bg-light">
 
-<nav class="navbar navbar-expand navbar-dark bg-primary">
-    <a class="sidebar-toggle mr-3" href="#"><i class="fa fa-bars"></i></a>
-    <a class="navbar-brand" href="#">BootAdmin</a>
-
-    <div class="navbar-collapse collapse">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a href="#" class="nav-link"><i class="fa fa-envelope"></i> 5</a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="fa fa-bell"></i> 3</a></li>
-            <li class="nav-item dropdown">
-                <a href="#" id="dd_user" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Doe</a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd_user">
-                    <a href="#" class="dropdown-item">Profile</a>
-                    <a href="#" class="dropdown-item">Logout</a>
-                </div>
-            </li>
-        </ul>
-    </div>
-</nav>
+<div th:replace="fragments/navigation :: navigation"></div>
 
 <div class="d-flex">
-    <div class="sidebar sidebar-dark bg-dark">
-        <ul class="list-unstyled">
-            <li><a th:href="@{/user}"><i class="fa fa-fw fa-link"></i> Users</a></li>
-            <li><a th:href="@{/category}"><i class="fa fa-fw fa-link"></i> Categories</a></li>
-            <li><a th:href="@{/product}"><i class="fa fa-fw fa-link"></i> Products</a></li>
-        </ul>
-    </div>
+
+    <div th:replace="fragments/menu :: menu"></div>
 
     <div class="content p-4">
 
@@ -47,7 +18,7 @@
                 Add user
             </div>
             <div class="card-body">
-                <form th:action="@{/product}" method="post" th:object="${product}">
+                <form th:action="@{/product}" method="post" th:object="${product}" enctype="multipart/form-data">
                     <input th:type="hidden" th:field="*{id}">
                     <div class="form-row">
                         <div class="col-md-4 mb-3">
@@ -89,15 +60,59 @@
                                 <div class="form-check">
                                     <input th:value="${category.name}" th:id="${category.id}" th:field="*{categories}"
                                            class="form-check-input" type="checkbox" th:name="${category.name}"
-                                           th:checked="${product.contains(category)}">
+                                           th:checked="${product.containsCategory(category)}">
                                     <label th:text="${category.name}" class="form-check-label" th:for="${category.id}">
                                         First radio
                                     </label>
                                 </div>
                             </div>
-
                         </div>
+
                     </fieldset>
+
+                    <fieldset class="form-group">
+                        <legend class="col-form-label col-sm-2 pt-0">Brands</legend>
+
+                        <div th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}"
+                             style="color: #dc3545; font-size: 12px"  id="brandError">
+                            Имя не может быть пустым!
+                        </div>
+
+                        <div class="row" >
+                            <div class="col-sm-10" th:each="brand : ${brands}">
+                                <div class="form-check">
+                                    <input th:value="${brand.name}" th:id="${brand.name}" th:field="*{brand}"
+                                           class="form-check-input" type="checkbox" th:name="${brand.name}"
+                                           th:checked="${product.containsBrand(brand)}">
+                                    <label th:text="${brand.name}" class="form-check-label" th:for="${brand.name}">
+                                        First radio
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </fieldset>
+
+                    <div class="form-group">
+                        <label for="newPictures">Product image</label>
+                        <input th:field="*{newPictures}"
+                               type="file" class="form-control" id="newPictures"
+                                placeholder="Upload new product picture" multiple>
+                    </div>
+
+
+                    <div class="container-fluid mb-4">
+                        <div class="card-columns" style="column-count: 5">
+                            <div class="card" th:each="pict : ${product.pictures}">
+                                <div class="card-header">Picture</div>
+                                <img class="card-img-bottom" th:src="@{/picture/{pictureId}(pictureId=${pict.id})}"
+                                     width="40%"/>
+                            </div>
+                        </div>
+                    </div>
+
+
+
 
                     <div class="card-footer bg-white">
                         <button class="btn btn-primary" type="submit">Save</button>
@@ -111,9 +126,7 @@
     </div>
 </div>
 
-<script th:src="@{../js/jquery.min.js}"></script>
-<script th:src="@{../js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{../js/bootadmin.min.js}"></script>
+<div th:replace="fragments/footer :: footer"></div>
 
 </body>
 </html>

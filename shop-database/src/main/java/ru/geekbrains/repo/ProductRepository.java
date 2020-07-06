@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 //А если нужна собственная реализация метода, то как ее написать правильно?
 // JpaSpecificationExecutor<Product> - для Specification<Product> формирование запроса в зависимости от параметров
@@ -25,7 +26,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query("select p from Product p where name like %:name% and price between :minPrice and :maxPrice")
     Page<Product> findProductsByNameAndPrice(@Param("name") String name, @Param("minPrice") BigDecimal minPrice, @Param("maxPrice") BigDecimal maxPrice, Pageable pageable);
 
-    Product findProductsById(Long id);
+    Optional<Product> findProductsById(Long id);
 
     void deleteProductById(Long id);
 }
