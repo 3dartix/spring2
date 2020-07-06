@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd ">
+
+    <preConditions>
+<!--    предназначен для mysql и выполнть его нужно под пользователем root-->
+        <dbms type="mysql"/>
+        <runningAs username="root"/>
+    </preConditions>
+
+    <changeSet id="0" author="art">
+        <tagDatabase tag="db_init"/>
+    </changeSet>
+    
+    <include file="v-1.0/db.changelog-v1.0.xml" relativeToChangelogFile="true"/>
+
+    <changeSet author="aleks_ush" id="4">
+        <tagDatabase tag="v-2.0"/>
+    </changeSet>
+
+    <include file="v-2.0/db.changelog-v2.0.xml" relativeToChangelogFile="true"/>
+
+    <changeSet author="art" id="6">
+        <tagDatabase tag="v-3.0"/>
+    </changeSet>
+
+    <include file="v-3.0/db.changelog-v3.0.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>
