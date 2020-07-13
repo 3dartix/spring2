@@ -10,6 +10,6 @@ public interface IService<T> {
     List<T> findAll();
     Optional<T> findById(Long id);
     Optional<T> findByName(String name);
-    void save(T o);
+    void save(T o) throws Exception;
     void deleteById(Long id);
 }

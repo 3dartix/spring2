@@ -9,8 +9,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "products")
@@ -22,22 +22,22 @@ public class Product {
     @Column(length = 150)
     private String name;
 
+    @Column
+    private BigDecimal price;
+
     @Column (columnDefinition = "TEXT")
 //    @Lob
 //    @Column(name="description", length=512)
     private String description;
-
-    @Column
-    private BigDecimal price;
-
-    @ManyToOne(optional = false)
-    private Brand brand;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "product_category",
             joinColumns = @JoinColumn(name="product_id"),
             inverseJoinColumns = @JoinColumn(name="category_id"))
     private List<Category> categories;
+
+    @ManyToOne(optional = false)
+    private Brand brand;
 
     @OneToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
     @JoinTable(name = "products_pictures",
@@ -53,5 +53,18 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 '}';
+    }
+
+
+    public Product(String name, String description, BigDecimal price, Brand brand, List<Category> categories, List<Picture> pictures) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.brand = brand;
+        this.categories = categories;
+        this.pictures = pictures;
+    }
+
+    public Product() {
     }
 }

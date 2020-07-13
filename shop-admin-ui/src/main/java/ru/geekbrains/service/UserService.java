@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.entity.User;
 import ru.geekbrains.repo.UserRepository;
+import ru.geekbrains.representation.UserRepr;
+import ru.geekbrains.representation.mapper.UserMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,19 +24,23 @@ public class UserService {
     }
 
     @Transactional
-    public void save (User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public void save (UserRepr userRepr){
+        userRepr.setPassword(passwordEncoder.encode(userRepr.getPassword()));
+        User user = UserMapper.MAPPER.toUser(userRepr);
         repository.save(user);
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> findById(long id) {
-        return repository.findById(id);
+    public UserRepr findById(long id) {
+//        Optional<UserRepr> optional = Optional.empty();
+//        optional.of(UserMapper.MAPPER.fromUser(repository.findById(id).get()));
+//        return optional;
+        return UserMapper.MAPPER.fromUser(repository.findById(id).get());
     }
 
     @Transactional(readOnly = true)
-    public List<User> findAll() {
-        return repository.findAll();
+    public List<UserRepr> findAll() {
+        return UserMapper.MAPPER.FromUserList(repository.findAll());
     }
 
     @Transactional
@@ -43,7 +49,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findByName(String name) {
-       return repository.findUserByName(name).orElse(null);
+    public UserRepr findByName(String name) {
+       return UserMapper.MAPPER.fromUser(repository.findByUsername(name).orElse(null));
     }
 }

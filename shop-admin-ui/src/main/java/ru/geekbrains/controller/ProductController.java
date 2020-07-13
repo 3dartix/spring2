@@ -1,25 +1,19 @@
 package ru.geekbrains.controller;
 
 import lombok.extern.apachecommons.CommonsLog;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.geekbrains.representation.ProductRepr;
 import ru.geekbrains.service.BrandServiceImpl;
-import ru.geekbrains.service.CategoryService;
-import ru.geekbrains.service.ProductService;
+import ru.geekbrains.service.CategoryServiceImpl;
+import ru.geekbrains.service.ProductServiceImpl;
 
 import javax.validation.Valid;
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Optional;
 
 @RequestMapping("/product")
@@ -27,14 +21,14 @@ import java.util.Optional;
 @Controller
 public class ProductController {
 
-    private final ProductService productService;
-    private final CategoryService categoryService;
+    private final ProductServiceImpl productService;
+    private final CategoryServiceImpl categoryServiceImpl;
     private final BrandServiceImpl brandService;
 
     @Autowired
-    public ProductController(ProductService productService, CategoryService categoryService, BrandServiceImpl brandService) {
+    public ProductController(ProductServiceImpl productService, CategoryServiceImpl categoryServiceImpl, BrandServiceImpl brandService) {
         this.productService = productService;
-        this.categoryService = categoryService;
+        this.categoryServiceImpl = categoryServiceImpl;
         this.brandService = brandService;
     }
 
@@ -70,7 +64,7 @@ public class ProductController {
         log.info("Create product form");
         //передаем в шаблонизатор html страницу user из view
         model.addAttribute("product", new ProductRepr());
-        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("categories", categoryServiceImpl.findAll());
         model.addAttribute("brands", brandService.findAll());
         return "product";
     }
@@ -83,7 +77,7 @@ public class ProductController {
         //передаем в шаблонизатор html страницу user из view
         model.addAttribute("product", productService.findById(idProduct.orElse(-1L)).get());
         model.addAttribute("brands", brandService.findAll());
-        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("categories", categoryServiceImpl.findAll());
         return "product";
     }
 
@@ -95,7 +89,7 @@ public class ProductController {
 
         if(bindingResult.hasErrors()){
             log.info(bindingResult.getAllErrors());
-            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("categories", categoryServiceImpl.findAll());
             model.addAttribute("brands", brandService.findAll());
             return "product";
         }
@@ -115,7 +109,7 @@ public class ProductController {
     @DeleteMapping
     public String deleteProduct(@RequestParam("id") Long id){
         log.info("Delete product with id:" + id);
-        productService.deleteProductByIe(id);
+        productService.deleteById(id);
         return "redirect:/product";
     }
 

@@ -1,7 +1,9 @@
     create table orders (
        id bigint not null auto_increment,
-        price decimal(19,2),
-        user_id bigint,
+        phone varchar(20) not null,
+        address text not null,
+        price decimal(19,2) not null,
+        user_id bigint not null,
         primary key (id)
     ) engine=InnoDB;
 GO

@@ -26,8 +26,12 @@
                     <thead>
                     <tr>
                         <th scope="col">Id</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">Username</th>
                         <th scope="col">Roles</th>
+                        <th scope="col">Firstname</th>
+                        <th scope="col">Lastname</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Email</th>
                         <th scope="col">Actions</th>
                     </tr>
                     </thead>
@@ -39,8 +43,12 @@
                     должно совпадать с именем указанном в контроллере -->
                     <tr th:each="user : ${users}">
                         <th scope="row" th:text="${user.id}">1</th>
-                        <td th:text="${user.name}">Alex</td>
-                        <td th:text="${user.getCategoriesLine()}">Alex</td>
+                        <td th:text="${user.username}">Alex</td>
+                        <td th:text="${user.getRolesLine()}">Alex</td>
+                        <td th:text="${user.firstName}">Alex</td>
+                        <td th:text="${user.lastName}">Alex</td>
+                        <td th:text="${user.phone}">Alex</td>
+                        <td th:text="${user.email}">Alex</td>
                         <td>
                             <a class="btn btn-success"  th:href="@{/user/edit(id=${user.id})}" ><i class="fas fa-edit"></i></a>
                             <form style="display: inline" th:method="delete" th:action="@{/user(id=${user.id})}">

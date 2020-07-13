@@ -22,11 +22,11 @@
                     <input th:type="hidden" th:field="*{id}">
                     <div class="form-row">
                         <div class="col-md-4 mb-3">
-                            <label for="name">Name</label>
-                            <input th:field="*{name}" th:errorclass="is-invalid"
-                                   type="text" class="form-control" id="name" placeholder="Name">
+                            <label for="username">Username</label>
+                            <input th:field="*{username}" th:errorclass="is-invalid"
+                                   type="text" class="form-control" id="username" placeholder="username">
 <!--                            th:errors="*{name}" - имя поля, которые отслеживаем class="invalid-feedback" form-control is-invalid-->
-                            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback" id="nameError">
+                            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback" id="nameError">
                                 Имя не может быть пустым!
                             </div>
                         </div>
@@ -35,6 +35,42 @@
                             <input th:field="*{password}" th:errorclass="is-invalid"
                                    type="text" class="form-control" id="password" placeholder="Password">
                             <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback" id="passwordError">
+                                Имя не может быть пустым!
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="firstName">First name</label>
+                            <input th:field="*{firstName}" th:errorclass="is-invalid"
+                                   type="text" class="form-control" id="firstName" placeholder="first name">
+                            <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="invalid-feedback" id="firstNameError">
+                                Имя не может быть пустым!
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="lastName">Last name</label>
+                            <input th:field="*{lastName}" th:errorclass="is-invalid"
+                                   type="text" class="form-control" id="lastName" placeholder="last name">
+                            <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="invalid-feedback" id="lastNameError">
+                                Имя не может быть пустым!
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="phone">Phone</label>
+                            <input th:field="*{phone}" th:errorclass="is-invalid"
+                                   type="text" class="form-control" id="phone" placeholder="phone">
+                            <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="invalid-feedback" id="phoneError">
+                                Имя не может быть пустым!
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="email">Email</label>
+                            <input th:field="*{email}" th:errorclass="is-invalid"
+                                   type="text" class="form-control" id="email" placeholder="email">
+                            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback" id="emailError">
                                 Имя не может быть пустым!
                             </div>
                         </div>

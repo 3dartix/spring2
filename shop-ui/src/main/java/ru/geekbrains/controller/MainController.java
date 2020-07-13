@@ -4,31 +4,30 @@ import lombok.extern.apachecommons.CommonsLog;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.entity.Picture;
-import ru.geekbrains.entity.Product;
 import ru.geekbrains.repo.BrandRepository;
 import ru.geekbrains.repo.PictureRepository;
 import ru.geekbrains.service.CategoryService;
 import ru.geekbrains.service.ProductService;
-import ru.geekbrains.utils.Cart;
+import ru.geekbrains.beans.Cart;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.Random;
 
 @Controller
 @CommonsLog
 @RequestMapping("/")
 public class MainController {
+
     public final ProductService productService;
     public final CategoryService categoryService;
     public final BrandRepository brandRepository;
@@ -61,15 +60,6 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping ("product")
-    public String productPage(Model model){
-        model.addAttribute("namePage", "shop");
-        model.addAttribute("products", productService.findAll());
-        model.addAttribute("categories", categoryService.findAll());
-        model.addAttribute("brands", brandRepository.findAll());
-        model.addAttribute("cart", cart);
-        return "shop";
-    }
 
 
     @GetMapping ("details/{id}")
@@ -79,33 +69,6 @@ public class MainController {
         model.addAttribute("product", productService.findById(id.orElse(-1L)));
 
         return "product-details";
-    }
-
-    @GetMapping ("cart")
-    public String cartPage(Model model,
-                           @RequestParam(value = "idProduct") Optional<Long> idProduct){
-        model.addAttribute("namePage", "cart");
-        model.addAttribute("cart", cart);
-        return "cart";
-    }
-
-    @GetMapping("/cart/add/{id}")
-    public void addToCart(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        cart.add(productService.findById(id).get());
-        response.sendRedirect(request.getHeader("referer"));
-    }
-
-    @GetMapping("/cart/subtract/{id}")
-    public void minusToCart(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        cart.subtract(productService.findById(id).get());
-        response.sendRedirect(request.getHeader("referer"));
-    }
-
-    @GetMapping ("cart/confirm-purchase")
-    public String confirmPurchasePage(Model model,
-                           @RequestParam(value = "idProduct") Optional<Long> idProduct){
-        model.addAttribute("cart", cart);
-        return "confirm-purchase";
     }
 
     @GetMapping("/picture/{pictureId}")
@@ -127,6 +90,23 @@ public class MainController {
                 response.getOutputStream().write(picture.get().getPictureData().getData());
             }
         }
+    }
+
+    @GetMapping("auth-form")
+    public String loginPage(HttpServletRequest request, Model model){
+
+        HttpSession session = request.getSession(false);
+        String errorMessage = null;
+        if (session != null) {
+            AuthenticationException ex = (AuthenticationException) session
+                    .getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+            if (ex != null) {
+                errorMessage = ex.getMessage();
+            }
+        }
+        model.addAttribute("errorMessage", errorMessage);
+
+        return "auth-form";
     }
 
     public int getRandom (int a, int b) {

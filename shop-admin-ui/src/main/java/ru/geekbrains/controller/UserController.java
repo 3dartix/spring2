@@ -10,6 +10,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.entity.User;
 import ru.geekbrains.repo.RoleRepository;
+import ru.geekbrains.representation.UserRepr;
 import ru.geekbrains.service.UserService;
 
 import javax.validation.Valid;
@@ -40,7 +41,7 @@ public class UserController {
     public String createUser(Model model) {
         log.info("Create user form");
         //передаем в шаблонизатор html страницу user из view
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserRepr());
         model.addAttribute("roles", roleRepository.findAll());
         return "user";
     }
@@ -55,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping
-    public String saveUser(@Valid User user, BindingResult bindingResult, Model model) {
+    public String saveUser(@Valid @ModelAttribute("user") UserRepr user, BindingResult bindingResult, Model model) {
         log.info("Save user method");
 
 //        //обработка одинаковых имен не работатет, когда мы редактируем объект

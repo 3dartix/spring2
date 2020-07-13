@@ -7,9 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.entity.Category;
-import ru.geekbrains.entity.Product;
-import ru.geekbrains.service.CategoryService;
-import ru.geekbrains.service.ProductService;
+import ru.geekbrains.service.CategoryServiceImpl;
+import ru.geekbrains.service.ProductServiceImpl;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -19,11 +18,11 @@ import java.util.Optional;
 @CommonsLog
 public class CategoryController {
 
-    private final CategoryService categoryService;
-    private final ProductService productService;
+    private final CategoryServiceImpl categoryService;
+    private final ProductServiceImpl productService;
 
     @Autowired
-    public CategoryController(CategoryService categoryService, ProductService productService) {
+    public CategoryController(CategoryServiceImpl categoryService, ProductServiceImpl productService) {
         this.categoryService = categoryService;
         this.productService = productService;
     }
@@ -69,10 +68,10 @@ public class CategoryController {
     public String deleteProduct(@RequestParam("id") Long id){
         //нужно как-то удалять каскадом все объекты где есть такая категория
         log.info("Delete category from product:" + id);
-        productService.deleteCategory(categoryService.findById(id));
+        productService.deleteCategory(categoryService.findById(id).get());
 
         log.info("Delete category with id:" + id);
-        categoryService.deleteProductById(id);
+        categoryService.deleteById(id);
         return "redirect:/category";
     }
 }

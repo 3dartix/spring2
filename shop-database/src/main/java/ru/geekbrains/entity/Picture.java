@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
 @Table(name = "pictures")
 public class Picture implements Serializable {
 
@@ -44,5 +44,8 @@ public class Picture implements Serializable {
         this.name = name;
         this.contentType = contentType;
         this.localPath = localPath;
+    }
+
+    public Picture() {
     }
 }

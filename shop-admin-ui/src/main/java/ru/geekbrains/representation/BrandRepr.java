@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
 public class BrandRepr implements Serializable {
 
     private Long id;
@@ -23,5 +23,14 @@ public class BrandRepr implements Serializable {
         this.id = brand.getId();
         this.name = brand.getName();
         this.products = brand.getProducts();
+    }
+
+    public BrandRepr() {
+    }
+
+    public BrandRepr(Long id, String name, List<Product> products) {
+        this.id = id;
+        this.name = name;
+        this.products = products;
     }
 }

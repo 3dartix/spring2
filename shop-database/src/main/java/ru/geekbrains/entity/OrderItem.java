@@ -35,4 +35,14 @@ public class OrderItem {
         this.quantity = 1;
         this.price = product.getPrice();
     }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", product=" + product.getName() +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
+    }
 }

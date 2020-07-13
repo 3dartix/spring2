@@ -27,9 +27,9 @@ public class UserAuthService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("loadUserByUsername");
-        return userRepository.findUserByName(username)
+        return userRepository.findByUsername(username)
                 //если пользователь нашелся делаем преобразование в User  import org.springframework.security.core.userdetails.UserDetails;
-                .map(user -> new User(user.getName(),
+                .map(user -> new User(user.getUsername(),
                         user.getPassword(),
                         user.getRoles().stream()
                             .map(role -> new SimpleGrantedAuthority(role.getName()))

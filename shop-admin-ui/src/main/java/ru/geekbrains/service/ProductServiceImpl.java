@@ -13,8 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.geekbrains.entity.*;
 import ru.geekbrains.exceptions.NotFoundException;
 import ru.geekbrains.repo.ProductRepository;
+import ru.geekbrains.repo.ProductSpecification;
 import ru.geekbrains.representation.ProductRepr;
-import ru.geekbrains.specification.ProductSpecification;
 import ru.geekbrains.utils.GenerateName;
 
 import javax.validation.Valid;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 @Service
 @CommonsLog
-public class ProductService {
+public class ProductServiceImpl implements IService<ProductRepr> {
 
     private ProductRepository productRepository;
 
@@ -42,7 +42,7 @@ public class ProductService {
     private boolean saveToDatabase;
 
     @Autowired
-    public ProductService(ProductRepository repository) {
+    public ProductServiceImpl(ProductRepository repository) {
         this.productRepository = repository;
     }
 
@@ -72,9 +72,21 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<ProductRepr> findProductById(Long id){
-        return productRepository.findProductsById(id).map(ProductRepr::new);
+    @Override
+    public Optional<ProductRepr> findById(Long id) {
+        return productRepository.findById(id).map(ProductRepr::new);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<ProductRepr> findByName(String name) {
+        return Optional.empty();
+    }
+
+//    @Transactional(readOnly = true)
+//    public Optional<ProductRepr> findProductById(Long id){
+//        return productRepository.findProductsById(id).map(ProductRepr::new);
+//    }
 
     @Transactional
     public void save(@Valid ProductRepr productRepr) throws IOException {
@@ -131,13 +143,9 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    @Transactional(readOnly = true)
-    public Optional<ProductRepr> findById(long id) {
-        return productRepository.findById(id).map(ProductRepr::new);
-    }
-
     @Transactional
-    public void deleteProductByIe(Long id){
+    @Override
+    public void deleteById(Long id) {
         if (!saveToDatabase) {
             deleteImageFromLocalDisk(id);
         }
@@ -150,7 +158,7 @@ public class ProductService {
         });
     }
 
-    public void createDirectory(){
+    private void createDirectory(){
         log.info("create folder: " +dataFolder);
         //проверяем существует ли каталог
         Path path = Paths.get(dataFolder);
@@ -165,15 +173,15 @@ public class ProductService {
         }
     }
 
-    public void deleteImageFromLocalDisk(Long id){
-        productRepository.findProductsById(id).get()
+    private void deleteImageFromLocalDisk(Long id){
+        findById(id).get()
                 .getPictures().forEach(picture -> {
-                    File file = new File(picture.getLocalPath());
-                    if (file.delete()){
-                        log.info(picture.getName() + " was removed");
-                    } else {
-                        log.info(picture.getName() + " not found in directory");
-                    }
-                });
+            File file = new File(picture.getLocalPath());
+            if (file.delete()){
+                log.info(picture.getName() + " was removed");
+            } else {
+                log.info(picture.getName() + " not found in directory");
+            }
+        });
     }
 }

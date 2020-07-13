@@ -101,6 +101,8 @@
         var unit = jQuery(this).data('unit');
         var value_min = jQuery(this).data('value-min');
         var value_max = jQuery(this).data('value-max');
+        // var value_min = document.getElementById("minPrice").value;
+        // var value_max = document.getElementById("maxPrice").value;
         var label_result = jQuery(this).data('label-result');
         var t = $(this);
         $(this).slider({
@@ -112,6 +114,9 @@
                 var result = label_result + " " + unit + ui.values[0] + ' - ' + unit + ui.values[1];
                 console.log(t);
                 t.closest('.slider-range').find('.range-price').html(result);
+                document.getElementById("minPrice").value = ui.values[0];
+                document.getElementById("maxPrice").value = ui.values[1];
+            // .html(result);
             }
         });
     });

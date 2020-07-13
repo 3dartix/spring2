@@ -7,8 +7,12 @@ GO
 
     create table users (
        id bigint not null auto_increment,
-        name varchar(64),
+        username varchar(64),
         password varchar(128),
+        firstname varchar(50),
+        lastname varchar(50),
+        phone varchar(20),
+        email varchar(128),
         primary key (id)
     ) engine=InnoDB;
 GO

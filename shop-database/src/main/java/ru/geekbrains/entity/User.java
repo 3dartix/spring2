@@ -20,32 +20,29 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Поле не может быть пустым")
     @Column(length = 64)
-    private String name;
+    private String username;
 
-    @NotBlank(message = "Поле не может быть пустым")
     @Column(length = 128)
     private String password;
 
-    @NotNull(message = "Выберите хотя бы одну роль")
-    @Size(min = 1, message = "Выберите хотя бы одну роль")
+    @Column(length = 50, name = "firstname")
+    private String firstName;
+
+    @Column(length = 50, name = "lastname")
+    private String lastName;
+
+    @Column(length = 20, name = "phone")
+    private String phone;
+
+    @Column(length = 128)
+    private String email;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
                 joinColumns = @JoinColumn(name="user_id"),
                 inverseJoinColumns = @JoinColumn(name="role_id"))
     private List<Role> roles;
-
-    public String getCategoriesLine() {
-        String result = "";
-        if(roles != null) {
-            for (Role role : roles) {
-                result = result + ", " + role.getName().replace("ROLE_", "");
-            }
-        }
-        result = result.replaceFirst(", ", "");
-        return result;
-    }
 
     @Override
     public String toString() {
