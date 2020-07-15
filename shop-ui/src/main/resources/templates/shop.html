@@ -56,7 +56,11 @@
                 <div class="catagories-menu">
                     <ul>
     <!--                    <li class="active"><a href="#">Chairs</a></li>-->
-                        <li th:each="category : ${categories}" ><a th:href="@{/product/(category=${category.name})}" th:text="${category.name}">Beds</a></li>
+                        <li class="" th:each="category : ${categories}" th:classappend="${filter.category == (category.name)} ? active">
+                            <a th:href="@{/product/(category=${category.name})}"
+                               th:text="${category.name}">Beds
+                            </a>
+                        </li>
 
 <!--                        <li th:each="category : ${categories}">-->
 <!--                            <input th:value="${category.name}" th:id="${category.id}" th:field="*{categories}"-->

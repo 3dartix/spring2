@@ -14,6 +14,7 @@ import ru.geekbrains.service.CategoryService;
 import ru.geekbrains.service.ProductService;
 
 import javax.validation.Valid;
+import javax.ws.rs.QueryParam;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -54,12 +55,12 @@ public class ProductController {
     @PostMapping
     public String productListByFilter(@ModelAttribute("filter") Filter filter, BindingResult bindingResult, Model model) {
 
-        log.info(filter.toString());
+        log.info(this.filter.toString());
 
         model.addAttribute("productsPage",
                 productService.filterByPrice(
-                        filter.getCategory(),
-                        filter.getBrands(),
+                        this.filter.getCategory(),
+                        null,
                         filter.getMinPrice().orElse(null),
                         filter.getMaxPrice().orElse(null),
                         PageRequest.of(page-1, pageSize)
@@ -82,33 +83,30 @@ public class ProductController {
 
     @GetMapping
     public String productList(Model model,
-                              @RequestParam(name = "category") Optional<String> category,
+                              @RequestParam(name = "brands") Optional<List<String>> brands,
+//                              @RequestParam(name = "category") Optional<String> category,
                               @RequestParam(name = "minPrice") Optional<Integer> minPrice,
-                              @RequestParam(name = "maxPrice") Optional<Integer> maxPrice,
-                              @RequestParam(name = "page") Optional<Integer> page,
-                              @RequestParam(name = "pageSize") Optional<Integer> pageSize){
+                              @RequestParam(name = "maxPrice") Optional<Integer> maxPrice
+//                              @RequestParam(name = "page") Optional<Integer> page,
+//                              @RequestParam(name = "pageSize") Optional<Integer> pageSize
+                              ){
 
+        log.info(brands);
 
-
-
-        filter.setCategory(category.orElse(null));
-        this.page = page.orElse(1);
-        this.pageSize = pageSize.orElse(5);
+//        filter.setCategory(category.orElse(null));
+//        this.page = page.orElse(1);
+//        this.pageSize = pageSize.orElse(5);
 
 
         model.addAttribute("productsPage",
                 productService.filterByPrice(
-                        category.orElse(null),
+                        filter.getCategory(),
                         null,
                         minPrice.orElse(10),
                         maxPrice.orElse(5000),
                         PageRequest.of(this.page - 1, this.pageSize)
                 ));
 
-
-        //if(filter.getCategories() != null) {
-//            log.info("minPrice: " + filter.getMinPrice() + " :: " + "maxPrice: " + filter.getMaxPrice() + " filter:");
-       // }
 
         model.addAttribute("minPrice", filter.getMinPrice().orElse(10));
         model.addAttribute("maxPrice", filter.getMaxPrice().orElse(1000));

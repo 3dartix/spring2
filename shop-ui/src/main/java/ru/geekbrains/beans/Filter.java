@@ -37,6 +37,13 @@ public class Filter {
         return false;
     }
 
+    public boolean containsCategory(String category){
+        if(this.category == category){
+            return true;
+        }
+        return false;
+    }
+
 
 
 }
