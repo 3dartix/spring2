@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="menu" class="sidebar sidebar-dark bg-dark">
+    <ul class="list-unstyled">
+        <li><a th:href="@{/user}"><i class="fa fa-fw fa-link"></i> Users</a></li>
+        <li><a th:href="@{/category}"><i class="fa fa-fw fa-link"></i> Categories</a></li>
+        <li><a th:href="@{/brand}"><i class="fa fa-fw fa-link"></i> Brands</a></li>
+        <li><a th:href="@{/product}"><i class="fa fa-fw fa-link"></i> Products</a></li>
+
+
+        <!--            <li>-->
+        <!--                <a href="#sm_expand_1" data-toggle="collapse">-->
+        <!--                    <i class="fa fa-fw fa-link"></i> Goods-->
+        <!--                </a>-->
+        <!--                <ul id="sm_expand_1" class="list-unstyled collapse">-->
+        <!--                    <li><a th:href="@{/category}">Categories</a></li>-->
+        <!--                    <li><a th:href="@{/product}">Products</a></li>-->
+        <!--                </ul>-->
+        <!--            </li>-->
+        <!--            <li><a href="#"><i class="fa fa-fw fa-link"></i> Menu Item</a></li>-->
+        <!--            <li><a href="#"><i class="fa fa-fw fa-link"></i> Menu Item</a></li>-->
+        <!--            <li><a href="#"><i class="fa fa-fw fa-link"></i> Menu Item</a></li>-->
+    </ul>
+</div>
