@@ -21,12 +21,14 @@ public class Filter {
     private Optional<Integer> minPrice;
     private Optional<Integer> maxPrice;
     private List<String> brands;
+    private Optional<String> name;
 
     @PostConstruct
     public void init() {
         minPrice = Optional.of(10);
         maxPrice = Optional.of(5000);
         brands = new ArrayList<>();
+        name = Optional.of("");
         log.info("filter init");
     }
 

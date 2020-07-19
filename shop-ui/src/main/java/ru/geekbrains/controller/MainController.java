@@ -62,14 +62,7 @@ public class MainController {
 
 
 
-    @GetMapping ("details/{id}")
-    public String detailsPage(Model model,
-                              @PathVariable Optional<Long> id){
-        model.addAttribute("cart", cart);
-        model.addAttribute("product", productService.findById(id.orElse(-1L)));
 
-        return "product-details";
-    }
 
     @GetMapping("/picture/{pictureId}")
     public void adminDownloadProductPicture(@PathVariable("pictureId") Long pictureId,

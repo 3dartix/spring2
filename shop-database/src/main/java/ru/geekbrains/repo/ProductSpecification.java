@@ -1,11 +1,13 @@
 package ru.geekbrains.repo;
 
 import org.springframework.data.jpa.domain.Specification;
+import ru.geekbrains.entity.Brand;
 import ru.geekbrains.entity.Product;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
-import java.util.List;
 
 public class ProductSpecification {
     public static Specification<Product> trueLiteral(){
@@ -13,11 +15,25 @@ public class ProductSpecification {
     }
 
     public static Specification<Product> constainCategory (String category){
-        return (root, query, builder) -> builder.equal(root.joinList("categories").get("name"), category);
+        return (root, query, builder) -> {
+//            query.distinct(true);
+            return builder.equal(root.joinList("categories").get("name"), category);
+        };
     }
 
     public static Specification<Product> constainBrand (String brand){
-        return (root, query, builder) -> builder.equal(root.get("brand").get("name"), brand);
+        return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> {
+//            query.distinct(true);
+            return builder.equal(root.get("brand").get("name"), brand);
+        };
+    }
+
+    public static Specification<Product> categoryIs(String brand){
+        return (root, query, builder) -> {
+            //builder.isMember если мы спросим у нашего продукта brands, то этот брэнд должен быть в этом списке
+//            return builder.isMember(brand, root.get("brand"));
+            return builder.equal(root.get("brand").get("name"), brand);
+        };
     }
 
     public static Specification<Product> priceGreaterThanEqual(BigDecimal price){

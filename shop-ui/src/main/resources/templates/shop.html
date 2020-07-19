@@ -4,6 +4,9 @@
 <div th:replace="fragments/head :: head"></div>
 
 <body>
+
+<div th:replace="fragments/login-form :: navigation(activeTab)"></div>
+
 <!-- Search Wrapper Area Start -->
 <div class="search-wrapper section-padding-100">
     <div class="search-close">
@@ -173,19 +176,42 @@
                             </div>
                             <div class="view-product d-flex align-items-center">
                                 <p>View</p>
-                                <form action="#" method="get">
-                                    <select name="select" id="viewProduct">
-                                        <option value="value">12</option>
-                                        <option value="value">24</option>
-                                        <option value="value">48</option>
-                                        <option value="value">96</option>
+                                <form th:method="post" th:action="@{/product}">
+                                    <select name="pageSize" id="pageSize">
+                                        <option value="2" >2</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="10">10</option>
                                     </select>
+<!--                                    <button  type="submit">awdwad</button>-->
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div th:include="fragments/chat :: chat"/>
+
+
+<!--            <form class="input-group mb-3">-->
+<!--                <div class="input-group-prepend">-->
+<!--                    <button type="submit" name="name" th:value="${filter.getName().get()}" class="input-group-text" id="name">Find by name</button>-->
+<!--                </div>-->
+<!--                <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">-->
+<!--            </form>-->
+
+            <form class="input-group mb-3">
+<!--                <label for="minPrice">Min price</label>-->
+                <div class="input-group-prepend">
+                    <button type="submit" class="input-group-text">Search</button>
+                </div>
+
+                <input th:value="${filter.getName().get()}"
+                       class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" type="text" name="name" id="name" placeholder="Enter min price" >
+
+            </form>
+
 
             <div class="row">
 
@@ -212,14 +238,14 @@
                             <!-- Ratings & Cart -->
                             <div class="ratings-cart text-right">
                                 <div class="ratings">
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true" th:each="star:${#numbers.sequence(1, product.calculateAverageRating())}"></i>
+<!--                                    <i class="fa fa-star" aria-hidden="true"></i>-->
+<!--                                    <i class="fa fa-star" aria-hidden="true"></i>-->
+<!--                                    <i class="fa fa-star" aria-hidden="true"></i>-->
+<!--                                    <i class="fa fa-star" aria-hidden="true"></i>-->
                                 </div>
                                 <div class="cart">
-                                    <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img th:src="@{img/core-img/cart.png}" alt=""></a>
+                                    <a th:href="@{'/cart/add/' + ${product.id}}" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img th:src="@{img/core-img/cart.png}" alt=""></a>
                                 </div>
                             </div>
                         </div>
@@ -231,12 +257,20 @@
             <div class="row">
                 <div class="col-12">
                     <!-- Pagination -->
-                    <nav aria-label="navigation">
+                    <nav aria-label="navigation" th:if="${productsPage.hasContent()}">
                         <ul class="pagination justify-content-end mt-50">
-                            <li class="page-item active"><a class="page-link" href="#">01.</a></li>
-                            <li class="page-item"><a class="page-link" href="#">02.</a></li>
-                            <li class="page-item"><a class="page-link" href="#">03.</a></li>
-                            <li class="page-item"><a class="page-link" href="#">04.</a></li>
+                            <li th:each="num: ${#numbers.sequence(1, productsPage.getTotalPages())}"
+                                th:classappend="${num == productsPage.getNumber() + 1} ? 'active'"
+                                class="page-item">
+                                <a
+                                    th:text="${num}+ '.'"
+                                    th:href="@{/product(page=${num}, pageSize=${productsPage.getSize()})}"
+                                    class="page-link">01.
+                                </a>
+                            </li>
+<!--                            <li class="page-item"><a class="page-link" href="#">02.</a></li>-->
+<!--                            <li class="page-item"><a class="page-link" href="#">03.</a></li>-->
+<!--                            <li class="page-item"><a class="page-link" href="#">04.</a></li>-->
                         </ul>
                     </nav>
                 </div>
@@ -244,6 +278,8 @@
         </div>
     </div>
 </div>
+
+
 <!-- ##### Main Content Wrapper End ##### -->
 
 <!-- ##### Newsletter Area Start ##### -->

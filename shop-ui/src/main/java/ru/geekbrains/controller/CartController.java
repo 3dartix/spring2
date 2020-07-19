@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Optional;
 
 @Controller
@@ -74,7 +75,7 @@ public class CartController {
 
     @PostMapping("confirm-purchase")
     public String saveOrder(@Valid @ModelAttribute("cart") Cart cart,
-                            BindingResult bindingResult, Model model){
+                            BindingResult bindingResult, Model model, Principal principal){
 
         cart.setItems(this.cart.getItems()); // костыль
 
@@ -85,8 +86,17 @@ public class CartController {
             return "confirm-purchase";
         }
 
+        Order order;
+
 //      сохранить заказ в базу и очистить корзину
-        Order order = CartToOrderMapper.MAPPER.toOrder(userRepository.findById(1L).get(), cart);
+        if(principal != null) {
+            log.info("saveOrder, user = " + principal.getName());
+            order = CartToOrderMapper.MAPPER.toOrder(userRepository.findByUsername(principal.getName()).get(), cart);
+        } else {
+            log.info("saveOrder, user = anonymous");
+            order = CartToOrderMapper.MAPPER.toOrder(userRepository.findByUsername("anonymous").get(), cart);
+        }
+
         cart.clear();
 
         log.info("order.getItems(): "+ order.getItems());

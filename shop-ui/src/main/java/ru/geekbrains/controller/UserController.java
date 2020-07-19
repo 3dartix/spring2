@@ -2,6 +2,7 @@ package ru.geekbrains.controller;
 
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,8 @@ import ru.geekbrains.repo.RoleRepository;
 import ru.geekbrains.representation.UserRepr;
 import ru.geekbrains.service.UserService;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping
-    public String saveUser(@Valid @ModelAttribute("user") UserRepr user, BindingResult bindingResult, Model model) {
+    public String saveUser(@Valid @ModelAttribute("user") UserRepr user, BindingResult bindingResult, Model model, HttpServletRequest request) throws ServletException {
         log.info("Save user method");
         log.info(user.getRoles());
 
@@ -62,7 +65,21 @@ public class UserController {
         roles.add(roleRepository.findRoleByName("ROLE_USER").get());
         user.setRoles(roles);
 
+        String pass = user.getPassword();
         userService.save(user);
+
+//        request.login(user.getUsername(), bCryptPasswordEncoder.encode(user.getPassword()));
+        authWithHttpServletRequest (request, user.getUsername(), pass);
         return "redirect:/";
     }
+
+    public void authWithHttpServletRequest(HttpServletRequest request, String username, String password) {
+        try {
+            log.info(username + " :: " + password);
+            request.login(username, password);
+        } catch (ServletException e) {
+            log.error("Error while login ", e);
+        }
+    }
+
 }

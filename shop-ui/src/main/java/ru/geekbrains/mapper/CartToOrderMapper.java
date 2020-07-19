@@ -1,6 +1,7 @@
 package ru.geekbrains.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.geekbrains.entity.Order;
 import ru.geekbrains.entity.OrderItem;
@@ -10,7 +11,7 @@ import ru.geekbrains.beans.Cart;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Component
 public class CartToOrderMapper {
     public static CartToOrderMapper MAPPER;
 

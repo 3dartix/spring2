@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div th:replace="fragments/head :: head"></div>
 
 <body>
+
+<div th:replace="fragments/login-form :: navigation(activeTab)"></div>
+
+
 <!-- Search Wrapper Area Start -->
 <div class="search-wrapper section-padding-100">
     <div class="search-close">
@@ -125,11 +129,8 @@
                             <!-- Ratings & Review -->
                             <div class="ratings-review mb-15 d-flex align-items-center justify-content-between">
                                 <div class="ratings">
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i style="color: #fbb710;" th:each="i:${#numbers.sequence(1, product.get().calculateAverageRating())}"
+                                       class="fa fa-star active" aria-hidden="true"></i>
                                 </div>
                                 <div class="review">
                                     <a href="#">Write A Review</a>
@@ -163,8 +164,127 @@
                     </div>
                 </div>
             </div>
+
+
+            <hr>
+            <table class="table">
+                <thead>
+                </thead>
+                <tbody>
+<!--                -->
+                <tr sec:authorize="isAuthenticated()" th:if="${is_comment_exists}">
+
+                    <form th:action="@{/details}" method="post" th:object="${comment}">
+                        <input hidden="hidden" th:value="${product.get().id}" id="product_id" name="product_id">
+                        <div class="form-group">
+                            <label for="exampleFormControlTextarea1">Your feedback</label>
+                            <textarea th:field="*{comment}" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+                        <br>
+                        <div>Please rate</div>
+                        <div class="form-group">
+                            <div style="padding: 20px 0;">
+
+                                <div class="form-check" style="display: inline; padding: 20px 30px 0 0">
+                                    <input th:value="${1}" id="1" th:field="*{rating}"
+                                           class="form-check-input" type="radio">
+                                    <label class="form-check-label" for="1">
+                                        1
+                                    </label>
+                                </div>
+                                <div class="form-check" style="display: inline; padding: 20px 30px 0 0">
+                                    <input th:value="${2}" id="2" th:field="*{rating}"
+                                           class="form-check-input" type="radio">
+                                    <label class="form-check-label" for="2">
+                                       2
+                                    </label>
+                                </div>
+                                <div class="form-check" style="display: inline; padding: 20px 30px 0 0">
+                                    <input th:value="${3}" id="3" th:field="*{rating}"
+                                           class="form-check-input" type="radio">
+                                    <label class="form-check-label" for="3">
+                                        3
+                                    </label>
+                                </div>
+                                <div class="form-check" style="display: inline; padding: 20px 30px 0 0">
+                                    <input th:value="${4}" id="4" th:field="*{rating}"
+                                           class="form-check-input" type="radio">
+                                    <label class="form-check-label" for="4">
+                                        4
+                                    </label>
+                                </div>
+                                <div class="form-check" style="display: inline; padding: 20px 30px 0 0">
+                                    <input th:value="${5}" id="5" th:field="*{rating}"
+                                           class="form-check-input" type="radio">
+                                    <label class="form-check-label" for="5">
+                                        5
+                                    </label>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-2">submit</button>
+                    </form>
+
+
+                    <hr>
+                </tr>
+                <tr>
+
+                    <div class="comments">
+                        <h3 class="title-comments" th:text="${'Comments ('+(product.get().getComments().size()) + ')'}">Комментарии (6)</h3>
+                        <ul class="media-list" th:each="com : ${product.get().getComments()}">
+                            <!-- Комментарий (уровень 1) -->
+                            <li class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img style="width: 100px; margin:20px" class="media-object img-thumbnail" src="https://klike.net/uploads/posts/2019-03/1551511801_1.jpg" alt="...">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="media-heading">
+                                        <div class="author" th:text="${com.user.firstName} + ' ' + ${com.getData()}">Дима</div>
+                                        <br>
+                                    </div>
+                                    <div class="media-text text-justify" th:text="${com.comment}">Lorem ipsum dolor sit amet. Blanditiis praesentium voluptatum deleniti atque. Autem vel illum, qui blanditiis praesentium voluptatum deleniti atque corrupti. Dolor repellendus cum soluta nobis. Corporis suscipit laboriosam, nisi ut enim. Debitis aut perferendis doloribus asperiores repellat. sint, obcaecati cupiditate non numquam eius. Itaque earum rerum facilis. Similique sunt in ea commodi. Dolor repellendus numquam eius modi. Quam nihil molestiae consequatur, vel illum, qui ratione voluptatem accusantium doloremque.</div>
+
+                                    <div class="metadata">
+                                        <br>
+                                        <span class="date">Rating: </span>
+                                        <div class="ratings">
+                                            <i style="color: #fbb710;" th:each="star:${#numbers.sequence(1,com.rating)}"
+                                               class="fa fa-star active" aria-hidden="true"></i>
+<!--                                            <i class="fa fa-star checked" aria-hidden="true"></i>-->
+<!--                                            <i class="fa fa-star" aria-hidden="true"></i>-->
+<!--                                            <i class="fa fa-star" aria-hidden="true"></i>-->
+<!--                                            <i class="fa fa-star" aria-hidden="true"></i>-->
+                                        </div>
+                                        <hr>
+                                    </div>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </tr>
+                </tbody>
+            </table>
+
+
+
+
+
+
+
+
         </div>
     </div>
+
+
     <!-- Product Details Area End -->
 </div>
 <!-- ##### Main Content Wrapper End ##### -->

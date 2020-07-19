@@ -18,6 +18,8 @@ import ru.geekbrains.repo.UserRepository;
 import ru.geekbrains.representation.UserRepr;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CommonsLog
@@ -64,5 +66,9 @@ public class UserService implements UserDetailsService {
 
     public boolean isUserExist(String username) {
         return userRepository.existsByUsername(username);
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
     }
 }

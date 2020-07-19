@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.entity.Product;
+import ru.geekbrains.repo.BrandRepository;
 import ru.geekbrains.repo.PictureRepository;
 import ru.geekbrains.repo.ProductRepository;
 import ru.geekbrains.repo.ProductSpecification;
@@ -22,11 +23,13 @@ import java.util.Optional;
 public class ProductService {
     private ProductRepository productRepository;
     private PictureRepository pictureRepository;
+    private BrandRepository brandRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, PictureRepository pictureRepository) {
+    public ProductService(ProductRepository productRepository, PictureRepository pictureRepository, BrandRepository brandRepository) {
         this.productRepository = productRepository;
         this.pictureRepository = pictureRepository;
+        this.brandRepository = brandRepository;
     }
 
     @Transactional(readOnly = true)
@@ -40,7 +43,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> filterByPrice(String category, List<String> brands, Integer minPrice, Integer maxPrice, Pageable pageable) {
+    public Page<Product> filterByPrice(String category, List<String> brands, String name, Integer minPrice, Integer maxPrice, Pageable pageable) {
         Specification<Product> specification = ProductSpecification.trueLiteral();
 
         log.info("minPrice:" + minPrice + " maxPrice:" + maxPrice + " category:" + category);
@@ -48,10 +51,22 @@ public class ProductService {
             specification = specification.and(ProductSpecification.constainCategory(category));
         }
 
-        if(brands != null) {
+        if(brands != null && !brands.isEmpty()) {
+            log.info("Specification brands Included");
+            Specification<Product> specBrand = null;
             for (String brand:brands) {
-                specification = specification.and(ProductSpecification.constainBrand(brand));
+                if(specBrand == null){
+                    specBrand = ProductSpecification.categoryIs(brand);
+                } else {
+                    specBrand = specBrand.or(ProductSpecification.categoryIs(brand));
+                }
             }
+
+            specification = specification.and(specBrand);
+        }
+
+        if(name != null && name != "") {
+            specification = specification.and(ProductSpecification.productName(name));
         }
 
         if(minPrice != null) {
@@ -64,5 +79,8 @@ public class ProductService {
 
         return productRepository.findAll(specification, pageable);
     }
-    
+
+    public void save(Product product) {
+        productRepository.save(product);
+    }
 }

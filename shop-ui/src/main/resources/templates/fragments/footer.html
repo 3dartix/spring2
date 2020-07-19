@@ -63,4 +63,14 @@
     <script th:src="@{/js/plugins.js}"></script>
     <!-- Active js -->
     <script th:src="@{/js/active.js}"></script>
+
+
+    <th:block th:fragment="scripts">
+        <a href="#" class="gotop"><i class="icon-double-angle-up"></i></a>
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script th:src="@{/webjars/sockjs-client/1.0.2/sockjs.min.js}"></script>
+        <script th:src="@{/webjars/stomp-websocket/2.3.3/stomp.min.js}"></script>
+        <script th:src="@{/js/chat.js}"></script>
+    </th:block>
+
 </div>

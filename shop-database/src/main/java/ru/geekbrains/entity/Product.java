@@ -45,6 +45,13 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "picture_id"))
     private List<Picture> pictures;
 
+    //new
+    @OneToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
+    @JoinTable(name = "products_comments",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    private List<Comment> comments;
+
     @Override
     public String toString() {
         return "Product{" +
@@ -54,7 +61,6 @@ public class Product {
                 ", price=" + price +
                 '}';
     }
-
 
     public Product(String name, String description, BigDecimal price, Brand brand, List<Category> categories, List<Picture> pictures) {
         this.name = name;
@@ -66,5 +72,18 @@ public class Product {
     }
 
     public Product() {
+    }
+
+    public int calculateAverageRating (){
+        int result = 0;
+        for (Comment com : comments) {
+            result += com.getRating();
+        }
+        if(result == 0) {
+            return 1;
+        } else {
+            result = result/comments.size();
+            return result;
+        }
     }
 }
