@@ -1,6 +1,7 @@
 package ru.geekbrains.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -50,6 +51,7 @@ public class Product {
     @JoinTable(name = "products_comments",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    @JsonIgnore
     private List<Comment> comments;
 
     @Override

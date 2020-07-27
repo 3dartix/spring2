@@ -13,6 +13,9 @@ import ru.geekbrains.service.ProductService;
 import ru.geekbrains.service.UserService;
 import ru.geekbrains.utils.Helpers;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.Optional;
 
@@ -52,12 +55,13 @@ public class DetailsController {
 
     @GetMapping("{id}")
     public String detailsPage(Model model,
-                              @PathVariable Optional<Long> id, Principal principal){
+                              @PathVariable Optional<Long> id, Principal principal,
+                              HttpServletRequest request,
+                              HttpServletResponse response){
         Optional<Product> product = productService.findById(id.orElse(-1L));
 
         model.addAttribute("cart", cart);
         model.addAttribute("comment", new CommentRepr());
-//        model.addAttribute("average_rating", Helpers.HELPERS.calculateAverageRating(product.get()));
         model.addAttribute("product", product);
 
         if(principal != null){
@@ -66,6 +70,11 @@ public class DetailsController {
             model.addAttribute("is_comment_exists", false);
         }
 
+        log.info(request.getServletPath());
+        Cookie cookie = new Cookie("product", request.getServletPath());
+        cookie.setMaxAge(24 * 60 * 60);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
 
         return "product-details";
     }
