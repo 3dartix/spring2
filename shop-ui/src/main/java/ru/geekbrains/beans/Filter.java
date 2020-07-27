@@ -46,6 +46,7 @@ public class Filter {
         return false;
     }
 
-
-
+    public void reset(){
+        init();
+    }
 }

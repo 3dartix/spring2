@@ -43,7 +43,7 @@ public class ProductService {
         log.info("начинаем сборку");
         Specification<Product> specification = ProductSpecification.trueLiteral();
 
-        log.info("minPrice:" + minPrice + " maxPrice:" + maxPrice + " category:" + category);
+        log.info("minPrice:" + minPrice + " maxPrice:" + maxPrice + " category:" + category + "brands" + brands);
         if(category != null) {
             specification = specification.and(ProductSpecification.constainCategory(category));
         }

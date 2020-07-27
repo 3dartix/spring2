@@ -51,7 +51,7 @@ public class Product {
     @JoinTable(name = "products_comments",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id"))
-    @JsonIgnore
+//    @JsonIgnore
     private List<Comment> comments;
 
     @Override

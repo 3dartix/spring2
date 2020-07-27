@@ -23,10 +23,14 @@ import ru.geekbrains.service.ProductService;
 import ru.geekbrains.utils.PageEntity;
 import ru.geekbrains.utils.RestResponsePage;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @RequestMapping("/product")
 @CommonsLog
@@ -59,7 +63,14 @@ public class ProductController {
         this.restTemplate = restTemplate;
     }
 
+    @GetMapping ("/reset")
+    public String resetFilter(){
+        filter.reset();
+        return "redirect:/product";
+    }
 
+
+    //spring cloud
     @GetMapping
     public String productList(Model model,
                               @RequestParam(name = "brands") Optional<List<String>> brands,
@@ -69,7 +80,7 @@ public class ProductController {
                               @RequestParam(name = "maxPrice") Optional<Integer> maxPrice,
                               @RequestParam(name = "page") Optional<Integer> numberPage,
                               @RequestParam(name = "pageSize") Optional<Integer> pageSize
-    ){
+    ) throws UnsupportedEncodingException {
 
         if(category.isPresent()){
             filter.setCategory(category.orElse(null));
@@ -91,40 +102,26 @@ public class ProductController {
             filter.setName(name);
         }
 
-
-//        Page<Product> page = productService.filterByPrice(
-//                filter.getCategory(),
-//                filter.getBrands(),
-//                filter.getName().orElse(""),
-//                filter.getMinPrice().orElse(10),
-//                filter.getMaxPrice().orElse(5000),
-//                PageRequest.of(numberPage.orElse(1) - 1, pageSize.orElse(5))
-//        );
-
-
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(productClientPath)
-//                .queryParam("brands", brands)
-//                .queryParam("category", category)
-//                .queryParam("name", name)
-//                .queryParam("minPrice", minPrice)
-//                .queryParam("maxPrice", maxPrice)
-                .queryParam("page", numberPage.orElse(10))
-                .queryParam("pageSize", pageSize.orElse(1000));
+                .queryParam("name", encodeValue(filter.getName().orElse("")))
+                .queryParam("minPrice", filter.getMinPrice().get())
+                .queryParam("maxPrice", filter.getMaxPrice().get())
+                .queryParam("page", numberPage.orElse(1))
+                .queryParam("pageSize", pageSize.orElse(5));
+
+        if(category.isPresent()){
+            builder.queryParam("category", encodeValue(category.get()));
+        }
+
+        if(brands.isPresent() && brands.get().size() > 0) {
+            for (String brand: brands.get()) {
+                builder.queryParam("brands", encodeValue(brand));
+            }
+        }
 
         log.info(builder.toUriString());
 
-        Page<Product> page;
-//        Page<Product> page = restTemplate.getForObject(builder.toUriString(), PageEntity.class).getPage();
-
-
-//        ParameterizedTypeReference<RestResponsePage<Product>> type = new ParameterizedTypeReference<RestResponsePage<Product>>() {};
-        ResponseEntity<Page<Product>> rateResponse =
-                restTemplate.exchange(builder.toUriString(),
-                        HttpMethod.GET, null, new ParameterizedTypeReference<Page<Product>>() {
-                        });
-        page = rateResponse.getBody();
-//        ResponseEntity<RestResponsePage<Product>> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, type);
-//        page = response.getBody();
+        Page<Product> page = restTemplate.getForObject(builder.toUriString(), RestResponsePage.class);
 
 
         model.addAttribute("productsPage", page);
@@ -142,7 +139,10 @@ public class ProductController {
         return "shop";
     }
 
-
+    private String encodeValue(String value) throws UnsupportedEncodingException {
+        log.info("decode: " + value);
+        return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+    }
 
 //    @GetMapping
 //    public String productList(Model model,
