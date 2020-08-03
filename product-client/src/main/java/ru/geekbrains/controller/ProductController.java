@@ -1,10 +1,14 @@
 package ru.geekbrains.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.geekbrains.beans.Filter;
@@ -16,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @CommonsLog
+@Api("CRUD operations for Products")
 @RestController
 public class ProductController {
 
@@ -29,9 +34,12 @@ public class ProductController {
         filter.init();
     }
 
+    //@PutMapping("/apps/{appId}/envs/{env}/clusters/{clusterName}/namespaces/{namespaceName}/item")
     @GetMapping ("/product")
+    @PutMapping(produces = "application/json")
+    @ApiOperation("Returns list of all products by filter")
     public RestResponsePage productList(
-            @RequestParam(name = "brands") Optional<List<String>> brands,
+            @RequestParam (name = "brands") @ApiParam("maybe several brands") Optional<List<String>> brands,
             @RequestParam(name = "category") Optional<String> category,
             @RequestParam(name = "name") Optional<String> name,
             @RequestParam(name = "minPrice") Optional<Integer> minPrice,
