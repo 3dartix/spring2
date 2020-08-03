@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: shop-zuul-proxy
+
+server:
+  port: 8181
+
+zuul:
+  ignoredServices: "*"
+  routes:
+    picture-client:
+      path: /picture/**
+      sensitiveHeaders:
+      serviceId: PICTURE-CLIENT
+    product-client:
+      path: /product/**
+      sensitiveHeaders:
+      serviceId: PRODUCT-CLIENT
+
+#shop-ui-service:
+#  ribbon:
+#    listOfServers: http://localhost:8082,http://localhost:8087
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    fetchRegistry: true
+
+

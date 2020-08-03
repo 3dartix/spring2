@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/head :: head"></div>
+
+<body>
+
+<!--<div th:replace="fragments/login-form :: navigation(activeTab)"></div>-->
+
+<!-- Search Wrapper Area Start -->
+<div class="search-wrapper section-padding-100">
+    <div class="search-close">
+        <i class="fa fa-close" aria-hidden="true"></i>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="search-content">
+                    <form action="#" method="get">
+                        <input type="search" name="search" id="search" placeholder="Type your keyword...">
+                        <button type="submit"><img th:src="@{../static/img/core-img/search.png}" alt=""></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="jumbotron d-flex align-items-center">
+            <div class="container">
+                    <div class="d-block mx-auto col-md-5">
+
+
+                        <form th:action="@{/user}" method="post" th:object="${user}">
+
+                            <input th:type="hidden" th:field="*{id}">
+
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input th:field="*{username}" th:errorclass="is-invalid"
+                                        type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp" placeholder="username">
+
+                                <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback" id="usernameError">
+                                    Имя не может быть пустым!
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group" >
+                                <label for="password" >Password</label>
+                                <input th:field="*{password}" th:errorclass="is-invalid"
+                                        type="password" class="form-control" id="password" name="password" placeholder="password">
+
+                                <div th:if="${#fields.hasErrors('password')}"
+                                     th:errors="*{password}" class="invalid-feedback" id="passwordError">
+                                    Имя не может быть пустым!
+                                </div>
+                            </div>
+
+                             <div class="form-group" >
+                                <label for="confirmPassword">Confirm password</label>
+                                <input th:field="*{confirmPassword}" th:errorclass="is-invalid"
+                                        type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="confirm password">
+
+                                 <div th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="invalid-feedback" id="confirmPasswordError">
+                                     Имя не может быть пустым!
+                                 </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="firstName">Firs name</label>
+                                <input th:field="*{firstName}" th:errorclass="is-invalid"
+                                        type="text" class="form-control" id="firstName" name="firstName" placeholder="first name">
+
+                                <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="invalid-feedback" id="firstNameError">
+                                    Имя не может быть пустым!
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lastName">Last name</label>
+                                <input th:field="*{lastName}" th:errorclass="is-invalid"
+                                        type="text" class="form-control" id="lastName" name="lastName" placeholder="last name">
+
+                                <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="invalid-feedback" id="lastNameError">
+                                    Имя не может быть пустым!
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input th:field="*{phone}" th:errorclass="is-invalid"
+                                        type="text" class="form-control" id="phone" name="phone" placeholder="phone">
+
+                                <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="invalid-feedback" id="phoneError">
+                                    Имя не может быть пустым!
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input th:field="*{email}" th:errorclass="is-invalid"
+                                        type="text" class="form-control" id="email" name="email" placeholder="email">
+
+                                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback" id="emailError">
+                                    Имя не может быть пустым!
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-10" th:each="role : ${roles}">
+                                    <div class="form-check">
+                                        <input th:value="${role.name}" th:id="${role.id} "
+                                               th:field="*{roles}"
+                                               th:checked="${role.name == 'ROLE_USER'}"
+                                               class="form-check-input" type="checkbox" th:name="${role.name}">
+                                        <label th:text="${role.name}" class="form-check-label" th:for="${role.id}">
+                                            First radio
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Registr</button>
+                        </form>
+                    </div>
+            </div>
+</div>
+
+</body>
+
+</html>
