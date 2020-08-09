@@ -10,8 +10,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "products")
@@ -64,17 +64,17 @@ public class Product {
                 '}';
     }
 
-    public Product(String name, String description, BigDecimal price, Brand brand, List<Category> categories, List<Picture> pictures) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.brand = brand;
-        this.categories = categories;
-        this.pictures = pictures;
-    }
-
-    public Product() {
-    }
+//    public Product(String name, String description, BigDecimal price, Brand brand, List<Category> categories, List<Picture> pictures) {
+//        this.name = name;
+//        this.description = description;
+//        this.price = price;
+//        this.brand = brand;
+//        this.categories = categories;
+//        this.pictures = pictures;
+//    }
+//
+//    public Product() {
+//    }
 
     public int calculateAverageRating (){
         int result = 0;

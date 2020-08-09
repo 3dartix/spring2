@@ -70,80 +70,7 @@ public class ProductController {
     }
 
 
-    //spring cloud
-    @GetMapping
-    public String productList(Model model,
-                              @RequestParam(name = "brands") Optional<List<String>> brands,
-                              @RequestParam(name = "category") Optional<String> category,
-                              @RequestParam(name = "name") Optional<String> name,
-                              @RequestParam(name = "minPrice") Optional<Integer> minPrice,
-                              @RequestParam(name = "maxPrice") Optional<Integer> maxPrice,
-                              @RequestParam(name = "page") Optional<Integer> numberPage,
-                              @RequestParam(name = "pageSize") Optional<Integer> pageSize
-    ) throws UnsupportedEncodingException {
-
-        if(category.isPresent()){
-            filter.setCategory(category.orElse(null));
-        }
-
-        if(brands.isPresent()){
-            filter.setBrands(brands.orElse(null));
-        }
-
-        if(minPrice.isPresent()){
-            filter.setMinPrice(minPrice);
-        }
-
-        if(maxPrice.isPresent()){
-            filter.setMaxPrice(maxPrice);
-        }
-
-        if(name.isPresent()){
-            filter.setName(name);
-        }
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(productClientPath)
-                .queryParam("name", encodeValue(filter.getName().orElse("")))
-                .queryParam("minPrice", filter.getMinPrice().get())
-                .queryParam("maxPrice", filter.getMaxPrice().get())
-                .queryParam("page", numberPage.orElse(1))
-                .queryParam("pageSize", pageSize.orElse(5));
-
-        if(category.isPresent()){
-            builder.queryParam("category", encodeValue(category.get()));
-        }
-
-        if(brands.isPresent() && brands.get().size() > 0) {
-            for (String brand: brands.get()) {
-                builder.queryParam("brands", encodeValue(brand));
-            }
-        }
-
-        log.info(builder.toUriString());
-
-        Page<Product> page = restTemplate.getForObject(builder.toUriString(), RestResponsePage.class);
-
-
-        model.addAttribute("productsPage", page);
-
-        model.addAttribute("minPrice", filter.getMinPrice().orElse(10));
-        model.addAttribute("maxPrice", filter.getMaxPrice().orElse(1000));
-
-        model.addAttribute("filter", filter);
-
-        model.addAttribute("namePage", "shop");
-        model.addAttribute("products", productService.findAll());
-        model.addAttribute("categories", categoryService.findAll());
-        model.addAttribute("brands", brandRepository.findAll());
-        model.addAttribute("cart", cart);
-        return "shop";
-    }
-
-    private String encodeValue(String value) throws UnsupportedEncodingException {
-        log.info("decode: " + value);
-        return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-    }
-
+//    //spring cloud
 //    @GetMapping
 //    public String productList(Model model,
 //                              @RequestParam(name = "brands") Optional<List<String>> brands,
@@ -153,7 +80,7 @@ public class ProductController {
 //                              @RequestParam(name = "maxPrice") Optional<Integer> maxPrice,
 //                              @RequestParam(name = "page") Optional<Integer> numberPage,
 //                              @RequestParam(name = "pageSize") Optional<Integer> pageSize
-//                              ){
+//    ) throws UnsupportedEncodingException {
 //
 //        if(category.isPresent()){
 //            filter.setCategory(category.orElse(null));
@@ -175,15 +102,27 @@ public class ProductController {
 //            filter.setName(name);
 //        }
 //
+//        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(productClientPath)
+//                .queryParam("name", encodeValue(filter.getName().orElse("")))
+//                .queryParam("minPrice", filter.getMinPrice().get())
+//                .queryParam("maxPrice", filter.getMaxPrice().get())
+//                .queryParam("page", numberPage.orElse(1))
+//                .queryParam("pageSize", pageSize.orElse(5));
 //
-//        Page<Product> page = productService.filterByPrice(
-//                filter.getCategory(),
-//                filter.getBrands(),
-//                filter.getName().orElse(""),
-//                filter.getMinPrice().orElse(10),
-//                filter.getMaxPrice().orElse(5000),
-//                PageRequest.of(numberPage.orElse(1) - 1, pageSize.orElse(5))
-//        );
+//        if(category.isPresent()){
+//            builder.queryParam("category", encodeValue(category.get()));
+//        }
+//
+//        if(brands.isPresent() && brands.get().size() > 0) {
+//            for (String brand: brands.get()) {
+//                builder.queryParam("brands", encodeValue(brand));
+//            }
+//        }
+//
+//        log.info(builder.toUriString());
+//
+//        Page<Product> page = restTemplate.getForObject(builder.toUriString(), RestResponsePage.class);
+//
 //
 //        model.addAttribute("productsPage", page);
 //
@@ -199,6 +138,66 @@ public class ProductController {
 //        model.addAttribute("cart", cart);
 //        return "shop";
 //    }
+
+    private String encodeValue(String value) throws UnsupportedEncodingException {
+        log.info("decode: " + value);
+        return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+    }
+
+    @GetMapping
+    public String productList(Model model,
+                              @RequestParam(name = "brands") Optional<List<String>> brands,
+                              @RequestParam(name = "category") Optional<String> category,
+                              @RequestParam(name = "name") Optional<String> name,
+                              @RequestParam(name = "minPrice") Optional<Integer> minPrice,
+                              @RequestParam(name = "maxPrice") Optional<Integer> maxPrice,
+                              @RequestParam(name = "page") Optional<Integer> numberPage,
+                              @RequestParam(name = "pageSize") Optional<Integer> pageSize
+                              ){
+
+        if(category.isPresent()){
+            filter.setCategory(category.orElse(null));
+        }
+
+        if(brands.isPresent()){
+            filter.setBrands(brands.orElse(null));
+        }
+
+        if(minPrice.isPresent()){
+            filter.setMinPrice(minPrice);
+        }
+
+        if(maxPrice.isPresent()){
+            filter.setMaxPrice(maxPrice);
+        }
+
+        if(name.isPresent()){
+            filter.setName(name);
+        }
+
+        Page<Product> page = productService.filterByPrice(
+                filter.getCategory(),
+                filter.getBrands(),
+                filter.getName().orElse(""),
+                filter.getMinPrice().orElse(10),
+                filter.getMaxPrice().orElse(5000),
+                PageRequest.of(numberPage.orElse(1) - 1, pageSize.orElse(5))
+        );
+
+        model.addAttribute("productsPage", page);
+
+        model.addAttribute("minPrice", filter.getMinPrice().orElse(10));
+        model.addAttribute("maxPrice", filter.getMaxPrice().orElse(1000));
+
+        model.addAttribute("filter", filter);
+
+        model.addAttribute("namePage", "shop");
+        model.addAttribute("products", productService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("brands", brandRepository.findAll());
+        model.addAttribute("cart", cart);
+        return "shop";
+    }
 
 
 }

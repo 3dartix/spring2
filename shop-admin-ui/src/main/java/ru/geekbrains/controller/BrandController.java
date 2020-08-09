@@ -31,23 +31,24 @@ public class BrandController {
     }
 
     @GetMapping("new")
-    public String createCategory(Model model) {
+    public String createBrand(Model model) {
         log.info("Start to create new brand");
         model.addAttribute("brand", new BrandRepr());
         return "brand";
     }
 
     @GetMapping("edit")
-    public String editCategory(Model model,
+    public String editBrand(Model model,
                                @RequestParam(value = "id") Optional<Long> id) {
-        log.info("Start to edit brand");
+        log.info("Start to edit brand!" + id.orElse(-1L));
 
         model.addAttribute("brand", brandService.findById(id.orElse(-1L)));
         return "brand";
     }
 
     @PostMapping
-    public String saveCategory(@Valid BrandRepr brandRepr, BindingResult bindingResult) {
+    //@RequestBody - добавил для spring test
+    public String saveBrand(@Valid @RequestBody BrandRepr brandRepr, BindingResult bindingResult) {
         log.info("Save brand method");
 
         if(bindingResult.hasErrors()){
@@ -60,7 +61,7 @@ public class BrandController {
     }
 
     @DeleteMapping
-    public String deleteProduct(@RequestParam("id") Long id){
+    public String deleteBrand(@RequestParam("id") Long id){
         //нужно как-то удалять каскадом все объекты где есть такая категория
         log.info("Delete brand from product:" + id);
 //        brandService.deleteById(id);

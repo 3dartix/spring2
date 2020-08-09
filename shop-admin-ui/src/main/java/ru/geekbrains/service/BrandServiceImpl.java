@@ -1,5 +1,6 @@
 package ru.geekbrains.service;
 
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.geekbrains.entity.Brand;
 import ru.geekbrains.exceptions.NotFoundException;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@CommonsLog
 @Service
 public class BrandServiceImpl implements IService<BrandRepr> {
     private final BrandRepository repository;
@@ -37,6 +39,7 @@ public class BrandServiceImpl implements IService<BrandRepr> {
 
     @Override
     public void save(BrandRepr brandRepr) {
+        log.info("BrandRepr :: " + brandRepr);
         Brand product = (brandRepr.getId() != null) ? repository.findById(brandRepr.getId())
                 .orElseThrow(() -> new NotFoundException()) : new Brand(
                 brandRepr.getId(),

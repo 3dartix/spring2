@@ -1,5 +1,6 @@
 package ru.geekbrains.representation;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.geekbrains.entity.Brand;
@@ -10,7 +11,8 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-//@NoArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class BrandRepr implements Serializable {
 
     private Long id;
@@ -25,12 +27,12 @@ public class BrandRepr implements Serializable {
         this.products = brand.getProducts();
     }
 
-    public BrandRepr() {
-    }
-
-    public BrandRepr(Long id, String name, List<Product> products) {
-        this.id = id;
-        this.name = name;
-        this.products = products;
-    }
+//    public BrandRepr() {
+//    }
+//
+//    public BrandRepr(Long id, String name, List<Product> products) {
+//        this.id = id;
+//        this.name = name;
+//        this.products = products;
+//    }
 }

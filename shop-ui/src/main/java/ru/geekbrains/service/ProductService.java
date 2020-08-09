@@ -1,5 +1,7 @@
 package ru.geekbrains.service;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,7 +19,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-
+@NoArgsConstructor
+@Data
 @CommonsLog
 @Service
 public class ProductService {

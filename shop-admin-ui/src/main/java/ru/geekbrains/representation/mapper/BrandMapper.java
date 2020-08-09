@@ -18,5 +18,5 @@ public interface BrandMapper {
 
     List<Brand> toBrandList(List<BrandRepr> brandReprList);
 
-    List<BrandRepr> FromBrandList(List<Brand> brandList);
+    List<BrandRepr> fromBrandList(List<Brand> brandList);
 }

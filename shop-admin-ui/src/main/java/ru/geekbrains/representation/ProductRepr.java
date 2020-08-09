@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class ProductRepr implements Serializable {
 
@@ -94,16 +94,16 @@ public class ProductRepr implements Serializable {
                 '}';
     }
 
-    public ProductRepr(String name, BigDecimal price,  String description, List<Category> categories, BrandRepr brand, List<PictureRepr> pictures, MultipartFile[] newPictures) {
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.categories = categories;
-        this.brand = brand;
-        this.pictures = pictures;
-        this.newPictures = newPictures;
-    }
-
-    public ProductRepr() {
-    }
+//    public ProductRepr(String name, BigDecimal price,  String description, List<Category> categories, BrandRepr brand, List<PictureRepr> pictures, MultipartFile[] newPictures) {
+//        this.name = name;
+//        this.price = price;
+//        this.description = description;
+//        this.categories = categories;
+//        this.brand = brand;
+//        this.pictures = pictures;
+//        this.newPictures = newPictures;
+//    }
+//
+//    public ProductRepr() {
+//    }
 }

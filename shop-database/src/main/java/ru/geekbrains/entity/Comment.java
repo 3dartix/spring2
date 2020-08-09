@@ -1,6 +1,8 @@
 package ru.geekbrains.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,7 @@ public class Comment {
     private Long id;
 
     @Basic
+    @JsonSerialize(using = ToStringSerializer.class) // для сериализации из json
     private LocalDateTime localDateTime;
 
     @ManyToOne

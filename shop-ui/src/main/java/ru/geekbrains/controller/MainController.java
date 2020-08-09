@@ -66,21 +66,28 @@ public class MainController {
     }
 
     @GetMapping
-    public String indexPage(Model model, HttpServletRequest request, HttpServletResponse response){
-        Cookie[] cookies = request.getCookies();
-        for (Cookie c:cookies) {
-//            if(c.getName().equals("product")){
-                log.info(c.getValue());
-//            }
+    public String indexPage(Model model,
+                            HttpServletRequest request,
+                            HttpServletResponse response,
+                            @CookieValue(value = "data", required = false) String data){
+        if(data == null){
+            response.addCookie(new Cookie("data", "hello"));
+            log.info("cookies were created");
+        } else {
+            log.info("cookie: " + data);
         }
+//        Cookie[] cookies = request.getCookies();
+//        for (Cookie c:cookies) {
+////            if(c.getName().equals("product")){
+//                log.info(c.getValue());
+////            }
+//        }
 //        response.addCookie();
 //        log.info(request.getContextPath());
 
         model.addAttribute("namePage", "home");
         model.addAttribute("products", productService.findAll());
         model.addAttribute("cart", cart);
-//        Product p = new Product();
-//        p.getPictures().get(getRandom(0, p.getPictures().size() - 1));
         return "index";
     }
 
@@ -91,26 +98,30 @@ public class MainController {
     @GetMapping("/picture/{pictureId}")
     public void adminDownloadProductPicture(@PathVariable("pictureId") Long pictureId,
                                             HttpServletResponse response) throws IOException {
-        response.getOutputStream().write(
-                restTemplate.getForObject(pictureClientPath + pictureId, byte[].class)
-        );
+        // -- spring cloud start
+//        response.getOutputStream().write(
+//                restTemplate.getForObject(pictureClientPath + pictureId, byte[].class)
+//        );
+        // -- spring cloud end
 
-//        log.info("Picture " + pictureId);
-//        Optional<Picture> picture = pictureRepository.findById(pictureId);
-//        if (picture.isPresent()) {
-//
-//            if(!saveToDatabase) {
-//                log.info("Load image from disk: " + "picture.get().getContentType() " + picture.get().getContentType() +
-//                        "picture.get().getLocalPath()" + picture.get().getLocalPath());
-//                response.setContentType(picture.get().getContentType());
-//                response.getOutputStream().write(FileUtils.readFileToByteArray(new File(picture.get().getLocalPath())));
-//
-//            } else {
-//                log.info("Load image from database: " + picture.get().getLocalPath());
-//                response.setContentType(picture.get().getContentType());
-//                response.getOutputStream().write(picture.get().getPictureData().getData());
-//            }
-//        }
+
+        // -- local data start
+        log.info("Picture " + pictureId);
+        Optional<Picture> picture = pictureRepository.findById(pictureId);
+        if (picture.isPresent()) {
+
+            if(!saveToDatabase) {
+                log.info("Load image from disk: " + "picture.get().getContentType() " + picture.get().getContentType() +
+                        "picture.get().getLocalPath()" + picture.get().getLocalPath());
+                response.setContentType(picture.get().getContentType());
+                response.getOutputStream().write(FileUtils.readFileToByteArray(new File(picture.get().getLocalPath())));
+
+            } else {
+                log.info("Load image from database: " + picture.get().getLocalPath());
+                response.setContentType(picture.get().getContentType());
+                response.getOutputStream().write(picture.get().getPictureData().getData());
+            }
+        }
     }
 
     @GetMapping("auth-form")
