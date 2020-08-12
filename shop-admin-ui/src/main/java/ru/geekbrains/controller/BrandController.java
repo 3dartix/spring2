@@ -2,6 +2,7 @@ package ru.geekbrains.controller;
 
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,7 +14,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/brand")
+@RequestMapping(value = "/brand")
 @CommonsLog
 public class BrandController {
     private final BrandServiceImpl brandService;
@@ -48,7 +49,7 @@ public class BrandController {
 
     @PostMapping
     //@RequestBody - добавил для spring test
-    public String saveBrand(@Valid @RequestBody BrandRepr brandRepr, BindingResult bindingResult) {
+    public String saveBrand(@Valid BrandRepr brandRepr, BindingResult bindingResult) {
         log.info("Save brand method");
 
         if(bindingResult.hasErrors()){

@@ -65,11 +65,10 @@ public class BrandControllerTest {
     public void saveBrandTest() throws Exception {
         //perform выполнить
         mvc.perform(post("/brand")
-//                .contentType(MediaType.APPLICATION_FORM_URLENCODED) // для заполнения формы
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(convertObjectToJsonBytes(BrandMapper.MAPPER.fromBrand(expectedEntity.getExpectedBrand())))
-//                .param("id", "" + expectedEntity.getExpectedBrand().getId())
-//                .param("name", "" + expectedEntity.getExpectedBrand().getName())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .content(convertObjectToJsonBytes(BrandMapper.MAPPER.fromBrand(expectedEntity.getExpectedBrand())))
+//                .param("id", "1")
+                .param("name", expectedEntity.getExpectedBrand().getName())
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection()) //ожидаем статус от 300 -399 (редирект)
                 .andExpect(view().name("redirect:/brand")); // редирект на такой адрес

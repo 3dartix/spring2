@@ -49,15 +49,7 @@ public class UserController {
         log.info("Save user method");
         log.info(user.getRoles());
 
-        if(bindingResult.hasErrors()){
-            log.info(bindingResult.getAllErrors());
-            return "registr-form";
-        }
-
-        if(!user.getPassword().equals(user.getConfirmPassword())){
-            log.info(user.getPassword() + " :: " + user.getConfirmPassword());
-            bindingResult.rejectValue("password", "error.user","Пароли не совпадают");
-            bindingResult.rejectValue("confirmPassword", "error.user","Пароли не совпадают");
+        if(checkBindingResult(user, bindingResult)){
             return "registr-form";
         }
 
@@ -68,8 +60,13 @@ public class UserController {
         String pass = user.getPassword();
         userService.save(user);
 
-//        request.login(user.getUsername(), bCryptPasswordEncoder.encode(user.getPassword()));
         authWithHttpServletRequest (request, user.getUsername(), pass);
+        return "redirect:/";
+    }
+
+    @GetMapping("delete/test-user")
+    public String deleteTestUser(Model model) {
+        userService.delete("test");
         return "redirect:/";
     }
 
@@ -80,6 +77,29 @@ public class UserController {
         } catch (ServletException e) {
             log.error("Error while login ", e);
         }
+    }
+
+    public boolean checkBindingResult(UserRepr user, BindingResult bindingResult){
+        boolean result = false;
+
+        if(bindingResult.hasErrors()){
+            log.info(bindingResult.getAllErrors());
+            result = true;
+        }
+
+        if(!user.getPassword().equals(user.getConfirmPassword())){
+            log.info(user.getPassword() + " :: " + user.getConfirmPassword());
+            bindingResult.rejectValue("password", "error.user","Пароли не совпадают");
+            bindingResult.rejectValue("confirmPassword", "error.user","Пароли не совпадают");
+            result = true;
+        }
+
+        if(userService.isUserExist(user.getUsername())){
+            bindingResult.rejectValue("username", "error.user","Пользователь с таким именем уже существует");
+            result = true;
+        }
+
+        return result;
     }
 
 }

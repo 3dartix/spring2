@@ -5,7 +5,7 @@ INSERT INTO users (`username`, `password`)
 GO
 
 INSERT INTO roles (`name`)
-    VALUE ('ROLE_ADMIN'), ('ROLE_GUEST');
+    VALUE ('ROLE_ADMIN'), ('ROLE_GUEST'), ('ROLE_USER');
 GO
 
 INSERT INTO `users_roles` (`user_id`, `role_id`)

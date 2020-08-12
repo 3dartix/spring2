@@ -7,7 +7,7 @@ GO
 
     create table users (
        id bigint not null auto_increment,
-        username varchar(64),
+        username varchar(64) unique,
         password varchar(128),
         firstname varchar(50),
         lastname varchar(50),

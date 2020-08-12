@@ -43,7 +43,8 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).get();
+        log.info("loadUserByUsername:" + username);
+        User user = userRepository.findByUsername(username).orElse(null);
         log.info("USER: " + user);
         if (user == null) {
             throw new UsernameNotFoundException("Invalid username or password");
@@ -63,10 +64,21 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-
-    public boolean isUserExist(String username) {
-        return userRepository.existsByUsername(username);
+    @Transactional
+    public boolean isUserExist (String username){
+        Optional<User> byUsername = userRepository.findByUsername(username);
+        if(byUsername.isPresent()) {
+            return true;
+        } else {
+            return false;
+        }
     }
+
+    @Transactional
+    public void delete (String username){
+        userRepository.deleteByUsername(username);
+    }
+
 
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);

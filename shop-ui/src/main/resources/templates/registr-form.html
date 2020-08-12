@@ -44,6 +44,10 @@
                                     Имя не может быть пустым!
                                 </div>
 
+<!--                                <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback" id="duplicate_username">-->
+<!--                                    Имя не может быть пустым!-->
+<!--                                </div>-->
+
                             </div>
 
 
@@ -126,7 +130,7 @@
                                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
                                 <label class="form-check-label" for="exampleCheck1">Check me out</label>
                             </div>
-                            <button type="submit" class="btn btn-primary">Registr</button>
+                            <button type="submit" class="btn btn-primary" id="btn-registr-ok">Registr</button>
                         </form>
                     </div>
             </div>
