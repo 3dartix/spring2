@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/head :: head"></div>
+
+<body class="bg-light">
+
+<div th:replace="fragments/navigation :: navigation"></div>
+
+<div class="d-flex">
+
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div class="content p-4">
+
+
+
+        <div class="row py-2">
+            <div class="col-12">
+                <a class="btn btn-primary" th:href="@{/product/new}">Add Product</a>
+            </div>
+            <div class="col-12 mt-3">
+                <form >
+                    <label for="minPrice">Min price</label>
+                    <input type="number" min="0" step="0.1" name="minPrice" id="minPrice" placeholder="Enter min price" th:value="${minPrice}">
+
+                    <label for="maxPrice">Max price</label>
+                    <input type="number" min="1"step="0.1" name="maxPrice" id="maxPrice" placeholder="Enter max price" th:value="${maxPrice}">
+
+                    <label for="productName">Product name</label>
+                    <input type="text" min="1"step="0.1" name="productName" id="productName" placeholder="Enter product name" th:value="${productName}">
+
+                    <br>
+                    <button type="submit" class="btn btn-primary mt-3">Update list</button>
+                </form>
+            </div>
+
+            <div class="col-12 mt-3">
+                <table class="table table-bordered my-2">
+                    <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--             th:unless аналог not срабатывает, если условие false-->
+                    <tr th:unless="${productsPage.hasContent()}">
+                        <td class="text-center" colspan="5">No data</td>
+                    </tr>
+                    <tr th:if="${productsPage.hasContent()}" th:each="product : ${productsPage.getContent()}">
+                        <th scope="row" th:text="${product.id}">1</th>
+                        <td th:text="${product.name}">Macbook pro 2015</td>
+                        <td th:text="${product.description}">Apple laptop</td>
+                        <td th:text="${product.price}">$2000</td>
+                        <td th:text="${product.getCategoriesLine()}">chair</td>
+                        <td th:text="${product.brand.getName()}">chair</td>
+                        <td>
+                            <a class="btn btn-success" th:href="@{/product/edit(idProduct=${product.id})}"><i class="fas fa-edit"></i></a>
+                            <form style="display: inline" th:method="delete" th:action="@{/product(id=${product.id})}">
+                                <button class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+                            </form>
+                            <!--                        <a class="btn btn-danger" th:href="@{/product/delete(idProduct=${product.id})}"><i class="far fa-trash-alt"></i></a>-->
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-12" th:if="${productsPage.hasContent()}">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination mt-3">
+                        <!--                    /product() передаем параметры-->
+                        <li class="page-item"
+                            th:classappend="${!productsPage.hasPrevious()} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/product(page=${currentPage - 1}, pageSize=${productsPage.getSize()}, minPrice=${minPrice}, maxPrice=${maxPrice})}">Previous</a></li>
+                        <!--#numbers.sequence(1, productsPage.totalPages()) позволяет сгенерировать последовательность-->
+                        <!-- ${num == productsPage.getNumber() + 1} ? 'active'" добавляем класс если открыта текущая страница-->
+                        <li class="page-item"
+                            th:each="num: ${#numbers.sequence(1, productsPage.getTotalPages())}"
+                            th:classappend="${num == productsPage.getNumber() + 1} ? 'active'">
+                            <a class="page-link"
+                               th:text="${num}"
+                               th:href="@{/product(page=${num}, pageSize=${productsPage.getSize()}, minPrice=${minPrice}, maxPrice=${maxPrice})}"> 1 </a>
+
+                        <li class="page-item" th:classappend="${!productsPage.hasNext()} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/product(page=${currentPage + 1}, pageSize=${productsPage.getSize()}, minPrice=${minPrice}, maxPrice=${maxPrice})}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

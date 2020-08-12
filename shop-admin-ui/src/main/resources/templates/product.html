@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/head :: head"></div>
+
+<body class="bg-light">
+
+<div th:replace="fragments/navigation :: navigation"></div>
+
+<div class="d-flex">
+
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div class="content p-4">
+
+        <div class="card mb-4">
+            <div class="card-header bg-white font-weight-bold">
+                Add user
+            </div>
+            <div class="card-body">
+                <form th:action="@{/product}" method="post" th:object="${product}" enctype="multipart/form-data">
+                    <input th:type="hidden" th:field="*{id}">
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="name">Name</label>
+                            <input th:field="*{name}" th:errorclass="is-invalid"
+                                   type="text" class="form-control" id="name" placeholder="Name">
+                            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback" id="nameError">
+                                Имя не может быть пустым!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="description">Description</label>
+                            <input th:field="*{description}" th:errorclass="is-invalid"
+                                   type="text" class="form-control" id="description" placeholder="Description">
+                            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="invalid-feedback" id="descriptionError">
+                                Имя не может быть пустым!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="price">Price</label>
+                            <input th:field="*{price}"  th:errorclass="is-invalid"
+                                   type="text" class="form-control" id="price" placeholder="Price">
+                            <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="invalid-feedback" id="priceError">
+                                Имя не может быть пустым!
+                            </div>
+                        </div>
+                    </div>
+
+                    <fieldset class="form-group">
+                        <legend class="col-form-label col-sm-2 pt-0">Categories</legend>
+
+                        <div th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}"
+                             style="color: #dc3545; font-size: 12px"  id="rolesError">
+                            Имя не может быть пустым!
+                        </div>
+
+                        <div class="row" >
+                            <div class="col-sm-10" th:each="category : ${categories}">
+                                <div class="form-check">
+                                    <input th:value="${category.name}" th:id="${category.id}" th:field="*{categories}"
+                                           class="form-check-input" type="checkbox" th:name="${category.name}"
+                                           th:checked="${product.containsCategory(category)}">
+                                    <label th:text="${category.name}" class="form-check-label" th:for="${category.id}">
+                                        First radio
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                        <legend class="col-form-label col-sm-2 pt-0">Brands</legend>
+
+                        <div th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}"
+                             style="color: #dc3545; font-size: 12px"  id="brandError">
+                            Имя не может быть пустым!
+                        </div>
+
+                        <div class="row" >
+                            <div class="col-sm-10" th:each="brand : ${brands}">
+                                <div class="form-check">
+                                    <input th:value="${brand.name}" th:id="${brand.name}" th:field="*{brand}"
+                                           class="form-check-input" type="checkbox" th:name="${brand.name}"
+                                           th:checked="${product.containsBrand(brand)}">
+                                    <label th:text="${brand.name}" class="form-check-label" th:for="${brand.name}">
+                                        First radio
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </fieldset>
+
+                    <div class="form-group">
+                        <label for="newPictures">Product image</label>
+                        <input th:field="*{newPictures}"
+                               type="file" class="form-control" id="newPictures"
+                                placeholder="Upload new product picture" multiple>
+                    </div>
+
+
+                    <div class="container-fluid mb-4">
+                        <div class="card-columns" style="column-count: 5">
+                            <div class="card" th:each="pict : ${product.pictures}">
+                                <div class="card-header">Picture</div>
+                                <img class="card-img-bottom" th:src="@{/picture/{pictureId}(pictureId=${pict.id})}"
+                                     width="40%"/>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="card-footer bg-white">
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
